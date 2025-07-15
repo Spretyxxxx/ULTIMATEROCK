@@ -1,2 +1,0 @@
-# ULTIMATEROCK
-Moje první hra!
